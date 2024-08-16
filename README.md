@@ -77,9 +77,6 @@ Make sure you have Node.js and npm installed on your machine.
 
    Swagger UI is available at [http://localhost:3000/api-docs](http://localhost:3000/api-docs).
 
-   To view or export the Postman collection, you can use the following route:
-
-   [http://localhost:3000/postman_collection.json](http://localhost:3000/postman_collection.json) (This will be automatically generated based on Swagger documentation.)
 
 ## API Endpoints
 
