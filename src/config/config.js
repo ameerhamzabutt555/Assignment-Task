@@ -1,3 +1,18 @@
+/**
+ * Configuration Module
+ * 
+ * Loads and exports configuration settings for the application.
+ * Retrieves settings from environment variables with defaults provided for Redis configuration.
+ * 
+ * Environment Variables:
+ * - `CALENDARIFIC_API_KEY`: API key for Calendarific API
+ * - `CALENDARIFIC_API_URL`: Base URL for Calendarific API
+ * - `REDIS_PORT`: Port number for Redis server (default: 6379)
+ * - `REDIS_HOST`: Hostname for Redis server (default: 'localhost')
+ * 
+ * @module config
+ */
+
 require('dotenv').config();
 
 module.exports = {
