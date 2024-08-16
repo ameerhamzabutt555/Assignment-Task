@@ -1,91 +1,53 @@
-/**
- * Holiday Service
- * 
- * Provides functions to fetch and cache holiday and country data using the Calendarific API.
- * 
- * Functions:
- * - `getHolidays(country, year)`: Fetches holidays for a specific country and year. Caches the result for 1 hour.
- * - `getCountries()`: Fetches the list of supported countries. Caches the result for 1 hour.
- * 
- * Caching:
- * - Uses Redis for caching data to improve performance and reduce redundant API calls.
- * 
- * @module holidayService
- */
+// src/services/holidayService.js
 
-const axios = require('axios');
-const config = require('../config/config');
-const redis = require('../cache/redisClient');
+const { makeRequest } = require('../helpers/requestHelper');
+const { getFromCache, setInCache } = require('../helpers/cacheHelper');
+
+/**
+ * Fetches and caches data using dynamic API requests.
+ * 
+ * @param {string} method - The HTTP method to use (e.g., 'GET').
+ * @param {string} endpoint - The API endpoint to call.
+ * @param {Object} [params={}] - Query parameters.
+ * @param {Object} [data={}] - Request body data (if applicable).
+ * @param {string} cacheKey - The key for caching the response.
+ * @param {number} [cacheExpiry=3600] - Cache expiry time in seconds.
+ * @returns {Promise<Object>} - A promise that resolves to the fetched data.
+ */
+const fetchAndCacheData = async (method, endpoint, params = {}, data = {}, cacheKey, cacheExpiry = 3600) => {
+    const cachedData = await getFromCache(cacheKey);
+    if (cachedData) {
+        return cachedData;
+    }
+
+    const apiData = await makeRequest(method, endpoint, params, data);
+    await setInCache(cacheKey, apiData, cacheExpiry);
+    return apiData;
+};
 
 /**
  * Retrieves holidays for a specific country and year.
  * 
- * Checks if the data is cached in Redis. If cached, returns the data from the cache.
- * If not cached, fetches the data from the Calendarific API, caches it, and returns the data.
- * 
  * @param {string} country - The country code.
  * @param {number} year - The year for which to retrieve holidays.
  * @returns {Promise<Object>} - A promise that resolves to the holiday data.
- * @throws {Error} - Throws an error if there is an issue fetching the holidays.
  */
-const getHolidays = async (country, year) => {
+const getHolidays = (country, year) => {
     const cacheKey = `${country}-${year}`;
-    const cachedData = await redis.get(cacheKey);
-
-    if (cachedData) {
-        return JSON.parse(cachedData);
-    }
-
-    try {
-        const response = await axios.get(`${config.apiUrl}/holidays`, {
-            params: {
-                api_key: config.apiKey,
-                country,
-                year
-            }
-        });
-
-        const holidays = response.data.response.holidays;
-        await redis.set(cacheKey, JSON.stringify(holidays), 'EX', 3600); // Cache for 1 hour
-        return holidays;
-    } catch (error) {
-        throw new Error('Error fetching holidays');
-    }
+    return fetchAndCacheData('GET', 'holidays', { country, year }, {}, cacheKey);
 };
 
 /**
  * Retrieves the list of supported countries.
  * 
- * Checks if the data is cached in Redis. If cached, returns the data from the cache.
- * If not cached, fetches the data from the Calendarific API, caches it, and returns the data.
- * 
  * @returns {Promise<Object>} - A promise that resolves to the list of supported countries.
- * @throws {Error} - Throws an error if there is an issue fetching the countries.
  */
-const getCountries = async () => {
+const getCountries = () => {
     const cacheKey = 'countries';
-    const cachedData = await redis.get(cacheKey);
-
-    if (cachedData) {
-        return JSON.parse(cachedData);
-    }
-
-    try {
-        const response = await axios.get(`${config.apiUrl}/countries`, {
-            params: {
-                api_key: config.apiKey
-            }
-        });
-
-        const countries = response.data.response.countries;
-        await redis.set(cacheKey, JSON.stringify(countries), 'EX', 3600); // Cache for 1 hour
-        return countries;
-    } catch (error) {
-        throw new Error('Error fetching countries');
-    }
+    return fetchAndCacheData('GET', 'countries', {}, {}, cacheKey);
 };
 
 module.exports = {
     getHolidays,
-    getCountries
+    getCountries,
 };

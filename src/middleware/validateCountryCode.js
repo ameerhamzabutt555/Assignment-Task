@@ -9,10 +9,10 @@ const validateCountryCode = async (req, res, next) => {
         return res.status(400).json({ message: 'Country code is required' });
     }
 
-    // Validate country code format (e.g., must be two or three uppercase letters)
-    const countryCodeRegex = /^[A-Z]{2,3}$/;
+    // Validate country code format (e.g., must be two uppercase letters)
+    const countryCodeRegex = /^[A-Z]{2}$/;
     if (!countryCodeRegex.test(country)) {
-        return res.status(400).json({ message: 'Invalid country code format' });
+        return res.status(400).json({ message: 'Invalid country code format. It should be exactly two capital letters.' });
     }
 
     try {
