@@ -17,6 +17,7 @@ This project is a simple Node.js RESTful API that retrieves holiday information 
 - Jest for testing
 - Nodemon for development
 - dotenv for environment variables management
+- Swagger for API documentation
 
 ## Getting Started
 
@@ -26,35 +27,72 @@ Make sure you have Node.js and npm installed on your machine.
 
 ### Installation
 
-1.  **Clone the repository:**
+1. **Clone the repository:**
 
-    ```bash
-    git clone <repository-url>
-    cd node-holiday-api
-    ```
+   ```bash
+   git clone <repository-url>
+   cd node-holiday-api
+   ```
 
-2.  **Install dependencies::**
+2. **Install dependencies:**
 
-    npm install
+   ```bash
+   npm install
+   ```
 
-3.  **Set up environment variables:**
+3. **Set up environment variables:**
 
-    touch .env
+   Create a `.env` file in the root directory and add the following environment variables:
 
-    Inside the .env file, add:
+   ```env
+   CALENDARIFIC_API_KEY=your_calendarific_api_key
+   CALENDARIFIC_API_URL=https://calendarific.com/api/v2
+   REDIS_HOST=localhost
+   REDIS_PORT=6379
+   ```
 
-        CALENDARIFIC_API_KEY=your_calendarific_api_key
-        CALENDARIFIC_API_URL=https://calendarific.com/api/v2
-        REDIS_HOST=localhost
-        REDIS_PORT=6379
+4. **Running the Application:**
 
-4.  **Running the Application:**
+   To start the application in development mode:
 
-    npm run dev
+   ```bash
+   npm run dev
+   ```
 
-    For production:
-    npm start
+   For production:
 
-5.  **Testing:**
+   ```bash
+   npm start
+   ```
 
-    npm test
+5. **Testing:**
+
+   To run tests:
+
+   ```bash
+   npm test
+   ```
+
+6. **API Documentation:**
+
+   Swagger UI is available at [http://localhost:3000/api-docs](http://localhost:3000/api-docs).
+
+   To view or export the Postman collection, you can use the following route:
+
+   [http://localhost:3000/postman_collection.json](http://localhost:3000/postman_collection.json) (This will be automatically generated based on Swagger documentation.)
+
+## API Endpoints
+
+- **Get Holidays**
+
+  - **Endpoint:** `/api/holidays`
+  - **Method:** GET
+  - **Description:** Retrieve holidays for a specific country and year.
+  - **Parameters:**
+    - `country`: Country code (e.g., PAK)
+    - `year`: Year for the holidays (e.g., 2024)
+
+- **Get Countries**
+  - **Endpoint:** `/api/countries`
+  - **Method:** GET
+  - **Description:** Retrieve a list of supported countries.
