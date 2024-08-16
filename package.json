@@ -17,7 +17,10 @@
     "express": "^4.19.2",
     "ioredis": "^5.4.1",
     "node-cache": "^5.1.2",
-    "redis": "^4.7.0"
+    "redis": "^4.7.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "@types/ioredis": "^5.0.0",
