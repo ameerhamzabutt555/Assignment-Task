@@ -1,58 +1,55 @@
-/**
- * Holiday Controller
- * 
- * Defines and exports request handlers for holiday-related API endpoints.
- * 
- * Functions:
- * - `getHolidays`: Retrieves holidays for a specified country and year by calling `holidayService.getHolidays`.
- * - `getCountries`: Retrieves the list of supported countries by calling `holidayService.getCountries`.
- * 
- * Error Handling:
- * - Returns a 500 status code with an error message if an exception occurs.
- * 
- * @module holidayController
- */
+// src/controllers/holidayController.js
 
+const { sendResponse } = require('../helpers/responseHelper');
 const holidayService = require('../services/holidayService');
+const { statusCodes, statusMessages } = require("../helpers/statusHelper")
 
 /**
- * Handler for GET /holidays
- * Retrieves holidays for the specified country and year.
+ * Controller to handle the request for fetching holidays.
  * 
- * Query Parameters:
- * - `country` (string): The country code.
- * - `year` (number): The year for which to retrieve holidays.
+ * This function retrieves holidays for a specific country and year based on query parameters.
+ * It uses the holidayService to fetch the data and the sendResponse helper to return a standardized response.
  * 
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
+ * @async
+ * @function getHolidays
+ * @param {Object} req - Express request object containing query parameters `country` and `year`.
+ * @param {Object} res - Express response object used to send back the desired HTTP response.
+ * @returns {Promise<void>} Sends the holiday data in a standardized response format.
+ * 
  */
 const getHolidays = async (req, res) => {
-    const { country, year } = req.query;
     try {
+        const { country, year } = req.query;
         const holidays = await holidayService.getHolidays(country, year);
-        res.json(holidays);
+        sendResponse(res, statusMessages.Success, 'Holidays fetched successfully', holidays);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        sendResponse(res, statusMessages.Error, 'Error fetching holidays', null, statusCodes.INTERNAL_SERVER_ERROR, error.message);
     }
 };
 
 /**
- * Handler for GET /countries
- * Retrieves the list of supported countries.
+ * Controller to handle the request for fetching supported countries.
  * 
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
+ * This function retrieves a list of supported countries. 
+ * It uses the holidayService to fetch the data and the sendResponse helper to return a standardized response.
+ * 
+ * @async
+ * @function getCountries
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object used to send back the desired HTTP response.
+ * @returns {Promise<void>} Sends the list of countries in a standardized response format.
+ * 
  */
 const getCountries = async (req, res) => {
     try {
         const countries = await holidayService.getCountries();
-        res.json(countries);
+        sendResponse(res, statusMessages.Success, 'Countries fetched successfully', countries);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        sendResponse(res, statusMessages.Error, 'Error fetching countries', null, statusCodes.INTERNAL_SERVER_ERROR, error.message);
     }
 };
 
 module.exports = {
     getHolidays,
-    getCountries
+    getCountries,
 };
