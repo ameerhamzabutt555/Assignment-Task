@@ -44,8 +44,9 @@ Make sure you have Node.js and npm installed on your machine.
     Inside the .env file, add:
 
         CALENDARIFIC_API_KEY=your_calendarific_api_key
-        CACHE_TTL=3600
         CALENDARIFIC_API_URL=https://calendarific.com/api/v2
+        REDIS_HOST=localhost
+        poREDIS_PORT=6379
 
 4.  **Running the Application:**
 
