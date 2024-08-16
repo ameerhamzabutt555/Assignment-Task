@@ -89,7 +89,7 @@ Make sure you have Node.js and npm installed on your machine.
   - **Method:** GET
   - **Description:** Retrieve holidays for a specific country and year.
   - **Parameters:**
-    - `country`: Country code (e.g., PAK)
+    - `country`: Country code (e.g., PK)
     - `year`: Year for the holidays (e.g., 2024)
 
 - **Get Countries**
